@@ -17,7 +17,13 @@
 
 	<!-- Resolves views selected for rendering by @Controllers to .jsp resources in the /WEB-INF/views directory -->
 	
-	<!--  -->
+	<!-- 
+		new InterResourceViewResolver( )
+		위의 객체를 생성하고 
+		아래의 setter 메소드를 호출을 하는 설정이다
+		.setPrefix("/WEB-INF/views/")
+		.setSuffix(".jsp")
+     -->
 	<beans:bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
 		<beans:property name="prefix" value="/WEB-INF/views/" />
 		<beans:property name="suffix" value=".jsp" />
