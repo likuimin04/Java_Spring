@@ -13,6 +13,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.gura.spring03.friend.dto.FriendDto;
 
+/* component scan 을 통해서 bean 이 된다.(Spring Bean Container 에서 관리가 된다.) */
 @Controller
 public class FriendController {
 	
