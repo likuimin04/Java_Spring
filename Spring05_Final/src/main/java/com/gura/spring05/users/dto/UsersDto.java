@@ -68,5 +68,6 @@ public class UsersDto {
 	public void setNewPwd(String newPwd) {
 		this.newPwd = newPwd;
 	}
-
+	
+	
 }

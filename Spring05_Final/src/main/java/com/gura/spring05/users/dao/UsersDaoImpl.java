@@ -50,7 +50,7 @@ public class UsersDaoImpl implements UsersDao{
 		int count=session.update("users.updatePwd", dto);
 		if(count==0) {
 			return false;
-		}else{
+		}else {
 			return true;
 		}
 	}
@@ -114,4 +114,3 @@ public class UsersDaoImpl implements UsersDao{
 	}
 
 }
-
