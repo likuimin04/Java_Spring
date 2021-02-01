@@ -1,22 +1,21 @@
-<%@page import="test.cafe.dao.CafeDao"%>
-<%@page import="test.cafe.dto.CafeDto"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
-<%
-	//1. GET 방식 파라미터로 전달되는 자세히 보여줄 글 번호를 읽어온다.
-	int num=Integer.parseInt(request.getParameter("num"));
-	//2. 글번호를 이용해서 DB 에서 글정보를 읽어온다.
-	CafeDto dto=CafeDao.getInstance().getData(num);
-	//3. 글 조회수를 올린다.
-	CafeDao.getInstance().addViewCount(num);
-	//4. 응답한다.
-%>    
+    pageEncoding="UTF-8"%> 
+<%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>    
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
 <title>/cafe/detail.jsp</title>
 <jsp:include page="../include/resource.jsp"></jsp:include>
+<style>
+	/* 프로필 이미지를 작은 원형으로 만든다 */
+	#profileImage{
+		width: 50px;
+		height: 50px;
+		border: 1px solid #cecece;
+		border-radius: 50%;
+	}
+</style>
 </head>
 <body>
 <jsp:include page="../include/navbar.jsp">
@@ -29,7 +28,7 @@
 				<a href="${pageContext.request.contextPath }/">Home</a>
 			</li>
 			<li class="breadcrumb-item">
-				<a href="${pageContext.request.contextPath }/cafe/list.jsp">글목록</a>
+				<a href="${pageContext.request.contextPath }/cafe/list.do">글목록</a>
 			</li>
 			<li class="breadcrumb-item active">상세보기</li>
 		</ul>
@@ -37,47 +36,81 @@
 	<table class="table table-bordered">
 		<tr>
 			<th>글번호</th>
-			<td><%=dto.getNum() %></td>
+			<td>${dto.num }</td>
 		</tr>
 		<tr>
 			<th>작성자</th>
-			<td><%=dto.getWriter() %></td>
+			<td>${dto.writer }</td>
 		</tr>
 		<tr>
 			<th>제목</th>
-			<td><%=dto.getTitle() %></td>
+			<td>${dto.title }</td>
 		</tr>
 		<tr>
 			<th>조회수</th>
-			<td><%=dto.getViewCount() %></td>
+			<td>${dto.viewCount }</td>
 		</tr>
 		<tr>
 			<th>등록일</th>
-			<td><%=dto.getRegdate() %></td>
+			<td>${dto.regdate }</td>
 		</tr>
 		<tr>
 			<td colspan="2">
-				<div><%=dto.getContent() %></div>
+				<div>${dto.content }</div>
 			</td>
 		</tr>
 	</table>
-	<%
-		//session scope 에서 로그인된 아이디를 읽어와 본다. ( null 일수도 있음 )
-		String id=(String)session.getAttribute("id");
-	%>
 	<ul>
-		<li><a href="list.jsp">목록보기</a></li>
-		<%if(dto.getWriter().equals(id)){ %>
-			<li><a href="private/updateform.jsp?num=<%=dto.getNum()%>">수정</a></li>
+		<li><a href="list.do">목록보기</a></li>
+		<c:if test="${dto.writer eq id }">
+			<li><a href="private/updateform.do?num=${dto.num }">수정</a></li>
 			<li><a href="javascript:deleteConfirm()">삭제</a></li>
-		<%} %>
+		</c:if>
 	</ul>
+	<!-- 댓글 목록 -->
+	<div class="comments">
+		<ul>
+			<c:forEach var="tmp" items="${commentList }">
+				<li>
+					<dl>
+						<dt>
+						<c:choose>
+							<c:when test="${empty tmp.profile }">
+								<svg id="profileImage" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person" viewBox="0 0 16 16">
+					  				<path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0zm4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4zm-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10c-2.29 0-3.516.68-4.168 1.332-.678.678-.83 1.418-.832 1.664h10z"/>
+								</svg>
+							</c:when>
+							<c:otherwise>
+								<img id="profileImage" 
+									src="${pageContext.request.contextPath }${tmp.profile}" />
+							</c:otherwise>
+						</c:choose>			
+						</dt>
+						<dd>
+							<pre>${tmp.content }</pre>
+						</dd>
+					</dl>
+				</li>
+			</c:forEach>
+		</ul>
+	</div>
+	<!-- 원글에 댓글을 다는 폼 -->
+	<div class="comment_form">
+		<form action="private/comment_insert.do" method="post">
+			<!-- 원글의 글번호가 ref_group  번호가 된다. -->
+			<input type="hidden" name="ref_group" value="${dto.num }" />
+			<!-- 원글의 작성자가 댓글의 수신자가 된다. -->
+			<input type="hidden" name="target_id" value="${dto.writer }"/>
+			<textarea name="content"></textarea>
+			<button type="submit">등록</button>
+		</form>
+	</div>
 </div>
 <script>
 	function deleteConfirm(){
 		let isDelete=confirm("글을 삭제 하시겠습니까?");
 		if(isDelete){
-			location.href="private/delete.jsp?num=<%=dto.getNum()%>";
+			location.href="private/delete.do?num=${dto.num}";
 		}
 	}
 </script>
