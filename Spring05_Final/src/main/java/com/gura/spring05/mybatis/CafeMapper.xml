@@ -6,10 +6,12 @@
 		SET title=#{title}, content=#{content}
 		WHERE num=#{num}
 	</update>
+	
 	<delete id="delete" parameterType="int">
 		DELETE FROM board_cafe
 		WHERE num=#{num}
 	</delete>
+	
 	<update id="addViewCount" parameterType="int">
 		UPDATE board_cafe
 		SET viewCount=viewCount+1
@@ -62,6 +64,7 @@
 		VALUES(board_cafe_seq.NEXTVAL, #{writer}, 
 			#{title}, #{content}, 0, SYSDATE)
 	</insert>
+	
 	<select id="getData" parameterType="int" resultType="cafeDto">
 		SELECT num,writer,title,content,viewCount,regdate
 		FROM board_cafe
