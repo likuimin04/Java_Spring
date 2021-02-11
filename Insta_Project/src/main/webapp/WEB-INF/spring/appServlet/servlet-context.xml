@@ -11,9 +11,7 @@
 		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.0.xsd
 		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.0.xsd">
 
-
 	<!-- DispatcherServlet Context: defines this servlet's request-processing infrastructure -->
-	
 	<!-- 
 		JNDI 데이터 소스 객체 얻어오는 설정   
 		Servers/context.xml 에 설정된 oracle 접속정보 가 있어야 된다. 
@@ -34,15 +32,17 @@
 		dataSource.setJndiName("java:comp/env/jdbc/myoracle");
 	 -->
 	
+	
 	<!-- 
 		SqlSessionFactory 객체 
-		value="classpath: 여기에 Configuration.xml 문서의 위치를 정확히 작성한다."/>
+		아래의
+		value="classpath: 여기에 Configuration.xml 문서의 위치를 정확히 작성한다."
 	-->
 	<beans:bean id="sessionFactory" 
 		class="org.mybatis.spring.SqlSessionFactoryBean">
 		<beans:property name="dataSource" ref="dataSource"/>
 		<beans:property name="configLocation"
-	value="classpath:com/gura/spring05/mybatis/Configuration.xml"/>
+	value="classpath:com/my/insta/mybatis/Configuration.xml"/>
 	</beans:bean>
 	<!-- 
 		sessionFactory=new SqlSessionFactoryBean();
@@ -52,6 +52,8 @@
 	
 
 	<!-- 
+		*위의 43번줄까지 코드들은 아래의 SqlSessionTemplate 객체를 위한 사전 작업임*
+		
 		SqlSession 인터페이스를 구현한 
 		SqlSessionTemplate(SqlSession) 객체 
 		Dao 가 의존하는 객체 
@@ -69,10 +71,6 @@
 		class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
 		<beans:property name="maxUploadSize" value="102400000"/>
 	</beans:bean>
-	
-	
-	<!-- DispatcherServlet Context: defines this servlet's request-processing infrastructure -->
-	
 	<!-- Enables the Spring MVC @Controller programming model -->
 	<annotation-driven />
 
@@ -86,7 +84,7 @@
 		<beans:property name="order" value="1"/>
 	</beans:bean>
 	
-	<context:component-scan base-package="com.gura.spring05" />
+	<context:component-scan base-package="com.my.insta" />
 	<!-- 
 		bean 의 이름을 이용해서 view 로 이동할수 있도록 설정 
 		setOrder(0) 는 0 순위로 찾아 가겠다는 의미 
@@ -96,6 +94,7 @@
 	<beans:bean class="org.springframework.web.servlet.view.BeanNameViewResolver">
 		<beans:property name="order" value="0"/>
 	</beans:bean>
-	<!-- 어노테이션 기반으로 aop 적용할수 있도록 설정 -->
-	<aop:aspectj-autoproxy/>	
+	<!-- 어노테이션 기반으로 aop 적용할 수 있도록 설정 -->
+	<aop:aspectj-autoproxy></aop:aspectj-autoproxy>
+	
 </beans:beans>

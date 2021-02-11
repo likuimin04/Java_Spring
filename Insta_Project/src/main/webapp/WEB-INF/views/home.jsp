@@ -1,14 +1,89 @@
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%@ page session="false" %>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html>
 <html>
 <head>
-	<title>Home</title>
+<meta charset="UTF-8">
+<title>/users/login_form.jsp</title>
+<jsp:include page="include/resource.jsp"></jsp:include>
+<style>
+	/* example 로그인 폼을 만들기 위한 css */
+	html,
+	body {
+	  height: 100%;
+	}
+	
+	body {
+	  display: -ms-flexbox;
+	  display: flex;
+	  -ms-flex-align: center;
+	  align-items: center;
+	  padding-top: 40px;
+	  padding-bottom: 40px;
+	  background-color: #f5f5f5;
+	}
+	
+	.form-signin {
+	  width: 100%;
+	  max-width: 330px;
+	  padding: 15px;
+	  margin: auto;
+	}
+	.form-signin .checkbox {
+	  font-weight: 400;
+	}
+	.form-signin .form-control {
+	  position: relative;
+	  box-sizing: border-box;
+	  height: auto;
+	  padding: 10px;
+	  font-size: 16px;
+	}
+	.form-signin .form-control:focus {
+	  z-index: 2;
+	}
+	.form-signin input[type="email"] {
+	  margin-bottom: -1px;
+	  border-bottom-right-radius: 0;
+	  border-bottom-left-radius: 0;
+	}
+	.form-signin input[type="password"] {
+	  margin-bottom: 10px;
+	  border-top-left-radius: 0;
+	  border-top-right-radius: 0;
+	}
+		
+</style>
 </head>
-<body>
-<h1>
-	Hello world!  
-</h1>
-
-<P>  The time on the server is ${serverTime}. </P>
+<body class="text-center">
+<form class="form-signin" action="users/login.do" method="post">
+	<%-- 원래 가려던 목적지 정보를 url 이라는 파라미터 명으로 전송될수 있도록 한다. --%>
+	<input type="hidden" name="url" value="${requestScope.url}"/>
+	
+	
+  	<h1 class="h3 mb-3 font-weight-normal">(주의)브랜드 명 추가 필요</h1>
+  	
+  	<label for="id" class="sr-only">아이디</label>
+  	<input type="text" id="id" name="id" class="form-control" 
+  		placeholder="아이디 입력..." value="${savedId }" required autofocus>
+  		
+  	<label for="pwd" class="sr-only">비밀번호</label>
+  	<input type="password" id="pwd" name="pwd" class="form-control" 
+  		placeholder="비밀번호 입력..." value="${savedPwd }" required>
+  		
+	<div class="checkbox mb-3">
+	    <label>
+	      <input type="checkbox" name="isSave" value="yes"> 로그인 정보 저장
+	    </label>
+	</div>
+	<button class="btn btn-lg btn-primary btn-block" type="submit">로그인</button>
+	<br />
+	<p>계정이 없으신가요?
+		<a href="${pageContext.request.contextPath }/users/signup_form.do">
+			<span>가입하기</span>
+		</a>
+	</p>
+	<p class="mt-5 mb-3 text-muted">&copy; 2021 [브랜드명] from mkcompany</p>
+</form>
 </body>
 </html>
